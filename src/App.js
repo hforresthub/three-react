@@ -13,7 +13,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<h1>Test</h1>
+			<h1>Flying Cubes</h1>
 			<Canvas>
 				<ambientLight />
 				<pointLight position={[10, 10, 10]} />
