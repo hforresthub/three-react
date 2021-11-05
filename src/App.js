@@ -9,6 +9,7 @@ import { ref, onValue, set } from 'firebase/database'
 function App() {
 
 	const [currentUserName, setCurrentUserName] = useState('')
+	const [colorChoice, setColorChoice] = useState('#000')
 
 	const [boxArray, setBoxArray] = useState([])
 	const [sphereArray, setSphereArray] = useState([])
@@ -21,16 +22,20 @@ function App() {
 		})
 		if (currentUserName && currentUserName != null && checkForName.length === 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
-			set(databaseRef, { x: 0, y: 0, z: 0 })
+			set(databaseRef, { x: 0, y: 0, z: -1, color: colorChoice })
+		} else if (currentUserName && currentUserName != null && checkForName.length != 0) {
+			const databaseRef = ref(realtime, `/users/${currentUserName}`)
+			set(databaseRef, { x: checkForName[0].x, y: checkForName[0].y, z: checkForName[0].z, color: colorChoice })
 		}
 	}
 
 	useEffect(() => {
 		const tempArrayB = []
-		const boxCount = 1000
+		const boxCount = 200
+		const boundSize = 50
 		
 		for (let i = 0; i < boxCount; i++) {
-			tempArrayB.push({ x: (Math.random() - 0.5) * 100, y: (Math.random() - 0.5) * 100, z: (Math.random() - 1) * 100 })
+			tempArrayB.push({ x: (Math.random() - 0.5) * boundSize, y: (Math.random() - 0.5) * boundSize, z: (Math.random() - 1) * boundSize, color: 'red' })
 		}
 		setBoxArray(tempArrayB)
 
@@ -46,7 +51,8 @@ function App() {
 					userName: propertyName,
 					x: myData[propertyName].x,
 					y: myData[propertyName].y,
-					z: myData[propertyName].z
+					z: myData[propertyName].z,
+					color: myData[propertyName].color
 				}
 				tempArray.push(IndexedUser)
 			}
@@ -67,12 +73,19 @@ function App() {
 		setCurrentUserName(event.target.value)
 	}
 
+	const handleColorChange = (event) => {
+		setColorChoice(event.target.value)
+	}
+
 	return (
 		<div className="App">
 			<h1>Flying Stuff</h1>
+			<p>wasd to move, space and c to rise of fall, enter your name and hit enter to add a sphere of the chosen color</p>
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="userName">User: </label>
 				<input type="text" name="userName" id="userName" value={currentUserName} onChange={handleUserNameChange} />
+				<label htmlFor="color">Color: </label>
+				<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
 			</form>
 			<Canvas>
 				<ambientLight />
@@ -92,7 +105,7 @@ function App() {
 						return (
 							// <>
 							// </>
-							<Sphere key={index} position={[element.x, element.y, element.z]} currentUser={currentUserName} currentUserTrue={element.userName === currentUserName} />
+							<Sphere key={index} position={[element.x, element.y, element.z]} color={element.color} currentUser={currentUserName} currentUserTrue={element.userName === currentUserName} />
 						)
 					// })
 					}) : null
