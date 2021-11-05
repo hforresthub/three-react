@@ -20,10 +20,10 @@ function App() {
 		const checkForName = sphereArray.filter((element) => {
 			return (element.userName === currentUserName)
 		})
-		if (currentUserName && currentUserName != null && checkForName.length === 0) {
+		if (currentUserName && currentUserName !== null && checkForName.length === 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
 			set(databaseRef, { x: 0, y: 0, z: -1, color: colorChoice })
-		} else if (currentUserName && currentUserName != null && checkForName.length != 0) {
+		} else if (currentUserName && currentUserName !== null && checkForName.length !== 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
 			set(databaseRef, { x: checkForName[0].x, y: checkForName[0].y, z: checkForName[0].z, color: colorChoice })
 		}
