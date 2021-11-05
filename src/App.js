@@ -16,7 +16,10 @@ function App() {
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		// add user if they dont exist in firebase yet
-		if (currentUserName && currentUserName != null) {
+		const checkForName = sphereArray.filter((element) => {
+			return (element.userName === currentUserName)
+		})
+		if (currentUserName && currentUserName != null && checkForName.length === 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
 			set(databaseRef, { x: 0, y: 0, z: 0 })
 		}
