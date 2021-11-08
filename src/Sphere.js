@@ -8,10 +8,12 @@ function Sphere(props) {
 	// This reference gives us direct access to the THREE.Mesh object
 	const currentSphere = useRef()
 	// Hold state for hovered and clicked events
-	const [hovered, hover] = useState(false)
-	const [clicked, click] = useState(Math.floor(Math.random() * 5))
+	const [hover, setHover] = useState(false)
+	const [click, setClick] = useState(Math.floor(Math.random() * 5))
+	const [destination, setDestination] = useState({x: props.x, y: props.y, z: props.z})
 	// Subscribe this component to the render-loop, rotate the mesh every frame
 	useFrame((state, delta) => {
+		// instead of setting location from key presses or props, gotten from firebase, use those as goal location, with state for location, and useFrames to move towards that location
 
 	})
 	useKeypress(['w', 'a', 's','d', ' ', 'c'], (event) => {
@@ -36,18 +38,18 @@ function Sphere(props) {
 		}
 
 		// bounding
-		const boundSize = 20
+		const boundSize = 13
 		if (currentSphere.current.position.x > boundSize) {
 			currentSphere.current.position.x = -1 * boundSize
 		}
 		if (currentSphere.current.position.x < -1 * boundSize) {
 			currentSphere.current.position.x = boundSize
 		}
-		if (currentSphere.current.position.y > boundSize) {
-			currentSphere.current.position.y = -boundSize
+		if (currentSphere.current.position.y > boundSize * 0.125) {
+			currentSphere.current.position.y = -0.125 * boundSize
 		}
-		if (currentSphere.current.position.y < -1 * boundSize) {
-			currentSphere.current.position.y = boundSize
+		if (currentSphere.current.position.y < -0.125 * boundSize) {
+			currentSphere.current.position.y = boundSize * 0.125
 		}
 		if (currentSphere.current.position.z > boundSize) {
 			currentSphere.current.position.z = -boundSize
@@ -62,18 +64,23 @@ function Sphere(props) {
 			set(databaseRef, { x: currentSphere.current.position.x, y: currentSphere.current.position.y, z: currentSphere.current.position.z, color: currentSphere.current.color })
 		}
 
+		//update camera location to players
+		if (props.currentUserTrue) {
+			props.cameraPos({x: currentSphere.current.position.x, y: currentSphere.current.position.y + 0.25, z: currentSphere.current.position.z + 2})
+		}
+
 	})
 	// Return the view, these are regular Threejs elements expressed in JSX
 	return (
 		<mesh
 			{...props}
 			ref={currentSphere}
-			scale={clicked ? 0.1 : 0.1}
-			onClick={(event) => click(clicked > 3 ? clicked + 1 : 0)}
-			onPointerOver={(event) => hover(true)}
-			onPointerOut={(event) => hover(false)}>
-			<sphereGeometry args={[1, 10, 10]} />
-			<meshStandardMaterial color={hovered ? 'blue' : props.color} />
+			scale={click ? 0.1 : 0.1}
+			onClick={(event) => setClick(click > 3 ? click + 1 : 0)}
+			onPointerOver={(event) => setHover(true)}
+			onPointerOut={(event) => setHover(false)}>
+			<sphereGeometry args={[1, 5, 5]} />
+			<meshStandardMaterial color={hover ? 'blue' : props.color} />
 		</mesh>
 	)
 }

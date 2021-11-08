@@ -3,59 +3,62 @@ import { useFrame } from '@react-three/fiber'
 
 function Box(props) {
 	// This reference gives us direct access to the THREE.Mesh object
-	const ref = useRef()
+	const curSquare = useRef()
 	// Hold state for hovered and clicked events
-	const [hovered, hover] = useState(false)
-	const [clicked, click] = useState(Math.floor(Math.random() * 5))
+	const [hover, setHover] = useState(false)
+	const [click, setClick] = useState(Math.floor(Math.random() * 5))
 	// Subscribe this component to the render-loop, rotate the mesh every frame
 	useFrame((state, delta) => {
-		ref.current.rotation.x += 0.01
-		ref.current.rotation.y += 0.001
-		if (clicked === 0) {
-			ref.current.position.z -= 0.01
-		} else if (clicked === 1) {
-			ref.current.position.x += 0.1 * Math.sin(ref.current.rotation.x)
-			ref.current.position.y += 0.1 * Math.sin(ref.current.rotation.y)
-			ref.current.position.z += 0.1 * Math.sin(ref.current.rotation.z)
-		} else if (clicked === 2) {
-			ref.current.position.x += -0.1 * Math.sin(ref.current.rotation.x)
-			ref.current.position.y += -0.1 * Math.sin(ref.current.rotation.y)
-			ref.current.position.z += -0.1 * Math.sin(ref.current.rotation.z)
-		} else if (clicked === 3) {
-			ref.current.position.z -= 0.1
-		} else if (clicked === 4) {
-			ref.current.position.z += 0.1
+		curSquare.current.rotation.x += 0.01
+		curSquare.current.rotation.y += 0.001
+		if (click === 0) {
+			curSquare.current.position.z += 0.01
+		} else if (click === 1) {
+			curSquare.current.position.x += 0.1 * Math.sin(curSquare.current.rotation.x)
+			curSquare.current.position.y += 0.1 * Math.sin(curSquare.current.rotation.y)
+			curSquare.current.position.z += 0.1 * Math.sin(curSquare.current.rotation.z)
+		} else if (click === 2) {
+			curSquare.current.position.x += -0.1 * Math.sin(curSquare.current.rotation.x)
+			curSquare.current.position.y += -0.1 * Math.sin(curSquare.current.rotation.y)
+			curSquare.current.position.z += -0.1 * Math.sin(curSquare.current.rotation.z)
+		} else if (click === 3) {
+			curSquare.current.position.z += 0.1
+		} else if (click === 4) {
+			curSquare.current.position.z += 0.05
 		}
-		if (ref.current.position.x > 100) {
-			ref.current.position.x = -100
+		curSquare.current.position.z += 0.1
+		// bounding
+		const boundSize = 100
+		if (curSquare.current.position.x > boundSize) {
+			curSquare.current.position.x = -1 * boundSize
 		}
-		if (ref.current.position.x < -100) {
-			ref.current.position.x = 100
+		if (curSquare.current.position.x < -1 * boundSize) {
+			curSquare.current.position.x = boundSize
 		}
-		if (ref.current.position.y > 100) {
-			ref.current.position.y = -100
+		if (curSquare.current.position.y > 0.5 * boundSize) {
+			curSquare.current.position.y = -0.5 * boundSize
 		}
-		if (ref.current.position.y < -100) {
-			ref.current.position.y = 100
+		if (curSquare.current.position.y < -0.5 * boundSize) {
+			curSquare.current.position.y = 0.5* boundSize
 		}
-		if (ref.current.position.z > 0) {
-			ref.current.position.z = -100
+		if (curSquare.current.position.z > 0) {
+			curSquare.current.position.z = -1 * boundSize
 		}
-		if (ref.current.position.z < -100) {
-			ref.current.position.z = 0
+		if (curSquare.current.position.z < -1 * boundSize) {
+			curSquare.current.position.z = 0
 		}
 	})
 	// Return the view, these are regular Threejs elements expressed in JSX
 	return (
 		<mesh
 			{...props}
-			ref={ref}
-			scale={clicked ? 0.5 : 0.5}
-			onClick={(event) => click(clicked > 3 ? clicked + 1 : 0)}
-			onPointerOver={(event) => hover(true)}
-			onPointerOut={(event) => hover(false)}>
+			ref={curSquare}
+			scale={click ? 0.5 : 0.5}
+			onClick={(event) => setClick(click > 5 ? 0 : click + 1)}
+			onPointerOver={(event) => setHover(true)}
+			onPointerOut={(event) => setHover(false)}>
 			<boxGeometry args={[1, 1, 1]} />
-			<meshStandardMaterial color={hovered || clicked === 0 ? 'grey' : (clicked === 1 ? 'green' : (clicked === 2 ? 'teal' : (clicked === 3 ? 'purple' : 'red')))} />
+			<meshStandardMaterial color={hover || click === 0 ? 'grey' : (click === 1 ? 'green' : (click === 2 ? 'teal' : (click === 3 ? 'purple' : 'red')))} />
 		</mesh>
 	)
 }

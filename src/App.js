@@ -1,8 +1,9 @@
 import './App.css';
 import Box from './Box'
 import Sphere from './Sphere'
+import Camera from './Camera'
 import { Canvas } from '@react-three/fiber'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import realtime from './firebase'
 import { ref, onValue, set } from 'firebase/database'
 
@@ -10,6 +11,7 @@ function App() {
 
 	const [currentUserName, setCurrentUserName] = useState('')
 	const [colorChoice, setColorChoice] = useState('#000')
+	const [cameraPosition, setCameraPosition] = useState({x:0, y: 0, z: 10})
 
 	const [boxArray, setBoxArray] = useState([])
 	const [sphereArray, setSphereArray] = useState([])
@@ -32,10 +34,10 @@ function App() {
 	useEffect(() => {
 		const tempArrayB = []
 		const boxCount = 200
-		const boundSize = 50
-		
+		const startSpreadModifier = 100
+
 		for (let i = 0; i < boxCount; i++) {
-			tempArrayB.push({ x: (Math.random() - 0.5) * boundSize, y: (Math.random() - 0.5) * boundSize, z: (Math.random() - 1) * boundSize, color: 'red' })
+			tempArrayB.push({ x: (Math.random() - 0.5) * startSpreadModifier, y: (Math.random() - 0.5) * startSpreadModifier * 0.5, z: (Math.random() - 2) * startSpreadModifier * 0.5, color: 'red' })
 		}
 		setBoxArray(tempArrayB)
 
@@ -60,9 +62,9 @@ function App() {
 			setSphereArray(tempArray)
 			// console.log("huh ", tempArray);
 		})
-	// }, [])
+		// }, [])
 
-	// useEffect(() => {
+		// useEffect(() => {
 
 		// use firebase to initialize saved players
 		// tempArray2.push({ x: (Math.random() - 0.5) * 100, y: (Math.random() - 0.5) * 100, z: (Math.random() - 1) * 100, userName: 'Hal' })
@@ -80,14 +82,18 @@ function App() {
 	return (
 		<div className="App">
 			<h1>Flying Stuff</h1>
-			<p>wasd to move, space and c to rise of fall, enter your name and hit enter to add a sphere of the chosen color</p>
+			<p>Enter your name and hit enter to add a sphere of the chosen color, wasd keys to move, space and c to rise or fall</p>
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="userName">User: </label>
 				<input type="text" name="userName" id="userName" value={currentUserName} onChange={handleUserNameChange} />
 				<label htmlFor="color">Color: </label>
 				<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
 			</form>
-			<Canvas>
+			<Canvas >
+				<Camera 
+					position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+					fov={180}
+				/>
 				<ambientLight />
 				<pointLight position={[10, 10, 10]} />
 				{
@@ -99,16 +105,16 @@ function App() {
 					})
 				}
 				{
-					sphereArray.length > 0 ? 
-					sphereArray.map((element, index) => {
-						// console.log(element);
-						return (
-							// <>
-							// </>
-							<Sphere key={index} position={[element.x, element.y, element.z]} color={element.color} currentUser={currentUserName} currentUserTrue={element.userName === currentUserName} />
-						)
-					// })
-					}) : null
+					sphereArray.length > 0 ?
+						sphereArray.map((element, index) => {
+							// console.log(element);
+							return (
+								// <>
+								// </>
+								<Sphere key={index} position={[element.x, element.y, element.z]} color={element.color} currentUser={currentUserName} currentUserTrue={element.userName === currentUserName} cameraPos={setCameraPosition} />
+							)
+							// })
+						}) : null
 				}
 			</Canvas>
 		</div>
@@ -116,3 +122,11 @@ function App() {
 }
 
 export default App;
+
+// Things to add maybe
+// - subtle sounds based on motion
+// - collision detection
+// - camera following sphere
+// - setting a motion for a sphere, perhaps a lockstate via click
+// 	- lower poly with spin
+// - shaders/post processing
