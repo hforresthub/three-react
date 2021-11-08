@@ -41,11 +41,11 @@ function Box(props) {
 		if (curSquare.current.position.y < -0.5 * boundSize) {
 			curSquare.current.position.y = 0.5* boundSize
 		}
-		if (curSquare.current.position.z > 0) {
+		if (curSquare.current.position.z > 26) {
 			curSquare.current.position.z = -1 * boundSize
 		}
 		if (curSquare.current.position.z < -1 * boundSize) {
-			curSquare.current.position.z = 0
+			curSquare.current.position.z = 26
 		}
 	})
 	// Return the view, these are regular Threejs elements expressed in JSX

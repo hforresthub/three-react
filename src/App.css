@@ -1,4 +1,15 @@
-canvas, body, .App, html, div {
+Canvas, body, .App, html {
 	width: 100%;
 	height: 90%;
+}
+Canvas {
+	height: 80vh;
+}
+.wrapper {
+	display: flex;
+}
+form {
+	display: flex;
+	flex-direction: column;
+	padding: 0 2%;
 }

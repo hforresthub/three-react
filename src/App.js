@@ -11,7 +11,8 @@ function App() {
 
 	const [currentUserName, setCurrentUserName] = useState('')
 	const [colorChoice, setColorChoice] = useState('#000')
-	const [cameraPosition, setCameraPosition] = useState({x:0, y: 0, z: 10})
+	const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 10 })
+	const [cameraRotation, setCameraRotation] = useState({ x: 0, y: 0, z: 0 })
 
 	const [boxArray, setBoxArray] = useState([])
 	const [sphereArray, setSphereArray] = useState([])
@@ -81,42 +82,62 @@ function App() {
 
 	return (
 		<div className="App">
-			<h1>Flying Stuff</h1>
-			<p>Enter your name and hit enter to add a sphere of the chosen color, wasd keys to move, space and c to rise or fall</p>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="userName">User: </label>
-				<input type="text" name="userName" id="userName" value={currentUserName} onChange={handleUserNameChange} />
-				<label htmlFor="color">Color: </label>
-				<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
-			</form>
-			<Canvas >
-				<Camera 
-					position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
-					fov={180}
-				/>
-				<ambientLight />
-				<pointLight position={[10, 10, 10]} />
-				{
-					boxArray.map((element, index) => {
-						// console.log(element);
-						return (
-							<Box key={index} position={[element.x, element.y, element.z]} />
-						)
-					})
-				}
-				{
-					sphereArray.length > 0 ?
-						sphereArray.map((element, index) => {
+			<div class="wrapper">
+				<h1>Flying Stuff</h1>
+				<p>Enter your name and hit enter to add a sphere of the chosen color, wasd keys to move, space and c to rise or fall</p>
+				<form onSubmit={handleSubmit}>
+					<label htmlFor="userName">User: </label>
+					<input type="text" name="userName" id="userName" value={currentUserName} onChange={handleUserNameChange} />
+					<label htmlFor="color">Color: </label>
+					<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
+				</form>
+				<p>Camera location: x: {cameraPosition.x} y: {cameraPosition.y} z: {cameraPosition.z}</p>
+			</div>
+			<div class="canvasWrapper">
+				<Canvas >
+					<Camera
+						position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+						rotation={[cameraRotation.x, cameraRotation.y, cameraRotation.z]}
+						fov={90}
+					// setViewOffset={( 0, 0, 20, 20, 0, 0 )}
+					// filmOffSet={100}
+					// zoom={100}
+					/>
+					<ambientLight />
+					<pointLight position={[10, 10, 10]} />
+					{
+						boxArray.map((element, index) => {
 							// console.log(element);
 							return (
-								// <>
-								// </>
-								<Sphere key={index} position={[element.x, element.y, element.z]} color={element.color} currentUser={currentUserName} currentUserTrue={element.userName === currentUserName} cameraPos={setCameraPosition} />
+								<Box key={index} position={[element.x, element.y, element.z]} />
 							)
-							// })
-						}) : null
-				}
-			</Canvas>
+						})
+					}
+					{
+						sphereArray.length > 0 ?
+							sphereArray.map((element, index) => {
+								// console.log(element);
+								return (
+									// <>
+									// </>
+									<Sphere
+										key={index}
+										position={[element.x, element.y, element.z]}
+										color={element.color}
+										name={element.userName}
+										currentUser={currentUserName}
+										currentUserTrue={element.userName === currentUserName}
+										cameraPos={setCameraPosition}
+										cameraRot={setCameraRotation}
+										setUser={setCurrentUserName}
+										setColor={setColorChoice}
+									/>
+								)
+								// })
+							}) : null
+					}
+				</Canvas>
+			</div>
 		</div>
 	);
 }
