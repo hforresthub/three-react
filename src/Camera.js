@@ -7,7 +7,7 @@ function Camera(props) {
 	// Make the camera known to the system
 	useEffect(() => {
 		set({ camera: ref.current })
-	}, [])
+	}, [set])
 	// Update it every frame
 	useFrame(() => {
 		// ref.current.updateMatrixWorld()

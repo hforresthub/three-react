@@ -3,7 +3,7 @@ import Box from './Box'
 import Sphere from './Sphere'
 import Camera from './Camera'
 import { Canvas } from '@react-three/fiber'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import realtime from './firebase'
 import { ref, onValue, set } from 'firebase/database'
 

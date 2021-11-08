@@ -10,7 +10,7 @@ function Sphere(props) {
 	// Hold state for hovered and clicked events
 	const [hover, setHover] = useState(false)
 	const [click, setClick] = useState(Math.floor(Math.random() * 5))
-	const [destination, setDestination] = useState({x: props.x, y: props.y, z: props.z})
+	// const [destination, setDestination] = useState({x: props.x, y: props.y, z: props.z})
 	// Subscribe this component to the render-loop, rotate the mesh every frame
 	useFrame((state, delta) => {
 		// instead of setting location from key presses or props, gotten from firebase, use those as goal location, with state for location, and useFrames to move towards that location
