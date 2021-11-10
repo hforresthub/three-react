@@ -82,7 +82,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<div class="wrapper">
+			<div className="wrapper">
 				<h1>Flying Stuff</h1>
 				<p>Enter your name and hit enter to add a sphere of the chosen color, wasd keys to move, space and c to rise or fall</p>
 				<form onSubmit={handleSubmit}>
@@ -91,9 +91,13 @@ function App() {
 					<label htmlFor="color">Color: </label>
 					<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
 				</form>
-				<p>Camera location: x: {cameraPosition.x} y: {cameraPosition.y} z: {cameraPosition.z}</p>
+				<div className="info">
+					<p>Camera location:</p>
+					<p>x: {cameraPosition.x} y: {cameraPosition.y} z: {cameraPosition.z}</p>
+					<p>rotation: {cameraRotation.y}</p>
+				</div>
 			</div>
-			<div class="canvasWrapper">
+			<div className="canvasWrapper">
 				<Canvas >
 					<Camera
 						position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}

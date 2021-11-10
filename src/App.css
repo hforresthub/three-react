@@ -2,8 +2,11 @@ Canvas, body, .App, html {
 	width: 100%;
 	height: 90%;
 }
-Canvas {
+Canvas, .canvasWrapper {
 	height: 80vh;
+}
+.wrapper {
+	height: 20vh;
 }
 .wrapper {
 	display: flex;
