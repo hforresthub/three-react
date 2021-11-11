@@ -3,6 +3,7 @@ import useKeypress from 'react-use-keypress'
 import { useFrame } from '@react-three/fiber'
 import realtime from './firebase'
 import { ref, set } from 'firebase/database'
+// import { useEffect } from 'react'
 
 function Sphere(props) {
 	// This reference gives us direct access to the THREE.Mesh object
@@ -16,6 +17,47 @@ function Sphere(props) {
 	const [lastUpdateLocation, setLastUpdateLocation] = useState([0, 0, 0])
 	// Subscribe this component to the render-loop, rotate the mesh every frame
 	useFrame((state, delta) => {
+		if (props.currentUserTrue) {
+			// console.log(props);
+			if (props.touched === 1) {
+				setRotForce({ x: 0, y: rotForce.y + 1.2, z: 0 })
+			} else if (props.touched === 2) {
+				setRotForce({ x: 0, y: rotForce.y - 1.2, z: 0 })
+			}
+			if (props.touched === 3) {
+				setPosForce({ x: posForce.x - Math.sin(currentSphere.current.rotation.y) * 5, y: posForce.y, z: posForce.z - Math.cos(currentSphere.current.rotation.y) * 5 })
+				// console.log("testing yo", posForce.x - Math.sin(currentSphere.current.rotation.y) * 50);
+				// currentSphere.current.position.z -= 1 * speed * Math.cos(currentSphere.current.rotation.y)
+				// currentSphere.current.position.x -= 1 * speed * Math.sin(currentSphere.current.rotation.y)
+			} else if (props.touched === 4) {
+				setPosForce({ x: posForce.x + Math.sin(currentSphere.current.rotation.y), y: posForce.y, z: posForce.z + Math.cos(currentSphere.current.rotation.y) })
+				// currentSphere.current.position.z += 1 * speed * Math.cos(currentSphere.current.rotation.y)
+				// currentSphere.current.position.x += 1 * speed * Math.sin(currentSphere.current.rotation.y)
+			}
+			props.setTouched(0)
+		}
+	})		
+		useFrame((state, delta) => {
+		// bounding
+		// const boundSize = 13
+		// if (currentSphere.current.position.x > boundSize) {
+		// 	currentSphere.current.position.x = -1 * boundSize
+		// }
+		// if (currentSphere.current.position.x < -1 * boundSize) {
+		// 	currentSphere.current.position.x = boundSize
+		// }
+		// if (currentSphere.current.position.y > boundSize * 0.25) {
+		// 	currentSphere.current.position.y = -0.25 * boundSize
+		// }
+		// if (currentSphere.current.position.y < -0.25 * boundSize) {
+		// 	currentSphere.current.position.y = boundSize * 0.25
+		// }
+		// if (currentSphere.current.position.z > boundSize) {
+		// 	currentSphere.current.position.z = -boundSize
+		// }
+		// if (currentSphere.current.position.z < -1 * boundSize) {
+		// 	currentSphere.current.position.z = boundSize
+		// }
 		// instead of setting location from key presses or props, gotten from firebase, use those as goal location, with state for location, and useFrames to move towards that location
 		// if (currentSphere.current.rotation.y < fixation.y - rotSpeed * 10) {
 		// 	currentSphere.current.rotation.y += 1 * rotSpeed * 2
@@ -75,7 +117,7 @@ function Sphere(props) {
 
 		// console.log(initialLocation, currentSphere.current.position)
 		const changedLocation = (x1, y1, z1, x2, y2, z2) => {
-			const distance = Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2) + (z1 - z2)*(z1 - z2))
+			const distance = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2))
 			return distance > 0.25
 		}
 
@@ -153,6 +195,9 @@ function Sphere(props) {
 		// }
 
 	})
+
+
+
 	// Return the view, these are regular Threejs elements expressed in JSX
 	return (
 		<mesh
@@ -164,6 +209,28 @@ function Sphere(props) {
 				props.setColor(props.color)
 				props.setUser(props.name)
 				setClick(1)
+				setPosForce({ x: posForce.x, y: posForce.y + 1, z: posForce.z })
+				// bounding
+				const boundSize = 13
+				if (currentSphere.current.position.x > boundSize) {
+					currentSphere.current.position.x = -1 * boundSize
+				}
+				if (currentSphere.current.position.x < -1 * boundSize) {
+					currentSphere.current.position.x = boundSize
+				}
+				if (currentSphere.current.position.y > boundSize * 0.25) {
+					currentSphere.current.position.y = -0.25 * boundSize
+				}
+				if (currentSphere.current.position.y < -0.25 * boundSize) {
+					currentSphere.current.position.y = boundSize * 0.25
+				}
+				if (currentSphere.current.position.z > boundSize) {
+					currentSphere.current.position.z = -boundSize
+				}
+				if (currentSphere.current.position.z < -1 * boundSize) {
+					currentSphere.current.position.z = boundSize
+				}
+
 			}}
 			onPointerOver={(event) => setHover(true)}
 			onPointerOut={(event) => setHover(false)}>

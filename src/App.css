@@ -16,3 +16,6 @@ form {
 	flex-direction: column;
 	padding: 0 2%;
 }
+.wrapper p {
+	display: none;
+}

@@ -13,6 +13,7 @@ function App() {
 	const [colorChoice, setColorChoice] = useState('#000')
 	const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 10 })
 	const [cameraRotation, setCameraRotation] = useState({ x: 0, y: 0, z: 0 })
+	const [touched, setTouched] = useState(0)
 
 	const [boxArray, setBoxArray] = useState([])
 	const [sphereArray, setSphereArray] = useState([])
@@ -80,6 +81,59 @@ function App() {
 		setColorChoice(event.target.value)
 	}
 
+	useEffect(() => {
+		let iX = null
+		let iY = null
+		
+		const startTouch = (e) => {
+			iX = e.touches[0].clientX
+			iY = e.touches[0].clientY
+		}
+		
+		const moveTouch = (e) => {
+			e.preventDefault()
+			
+			if (iX ===null) {
+				return
+			}
+			if (iY ===null) {
+				return
+			}
+			
+			let currentX = e.touches[0].clientX
+			let currentY = e.touches[0].clientY
+			
+			let diffX = iX - currentX
+			let diffY = iY - currentY
+			
+			let size = 1
+			if (Math.abs(diffX) > Math.abs(diffY)) {
+				if (diffX > size) {
+					console.log("swlf");
+					setTouched(1)
+				} else if (diffX < -1 * size) {
+					console.log("swrt");
+					setTouched(2)
+				}
+			} else {
+				if (diffY > size) {
+					console.log("swup");
+					setTouched(3)
+				} else if (diffY < -1 * size) {
+					console.log("swdn");
+					setTouched(4)
+				}
+			}
+
+			iX = null
+			iY = null
+
+		}
+		const screen = document.querySelector('.App')
+		screen.addEventListener('touchstart', startTouch, {passive: false})
+		screen.addEventListener('touchmove', moveTouch, {passive: false})
+	}, [])
+	
 	return (
 		<div className="App">
 			<div className="wrapper">
@@ -135,6 +189,8 @@ function App() {
 										cameraRot={setCameraRotation}
 										setUser={setCurrentUserName}
 										setColor={setColorChoice}
+										touched={touched}
+										setTouched={setTouched}
 									/>
 								)
 								// })
