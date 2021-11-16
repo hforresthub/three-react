@@ -1,8 +1,13 @@
-Live site:
+#Flying Stuff
+
+##Live site:
 
 https://three-react.netlify.app/
 
+##Description:
 
-Description:
+Just a playground for threeJS, React, and Firebase.  
 
-Just a playground for threeJS, React, and Firebase.  Click a sphere to take control of it (or create a new one via the form inputs), then use wasd keys and c and space to move around.  Updates the firebase database with your movements so others can see your changes in realtime.
+##Instructions: 
+
+Click a sphere to take control of it (or create a new one via the form inputs), then use wasd keys and c and space to move around if you have a keyboard, or on mobile swipe up/down/left/right or tab the sphere.  Updates the firebase database with your movements so others can see your changes in realtime.
