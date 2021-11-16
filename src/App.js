@@ -56,7 +56,8 @@ function App() {
 					x: myData[propertyName].x,
 					y: myData[propertyName].y,
 					z: myData[propertyName].z,
-					color: myData[propertyName].color
+					color: myData[propertyName].color,
+					curPosForce: myData[propertyName].curPosForce
 				}
 				tempArray.push(IndexedUser)
 			}
@@ -64,6 +65,8 @@ function App() {
 			setSphereArray(tempArray)
 			// console.log("huh ", tempArray);
 		})
+
+
 		// }, [])
 
 		// useEffect(() => {
@@ -72,6 +75,16 @@ function App() {
 		// tempArray2.push({ x: (Math.random() - 0.5) * 100, y: (Math.random() - 0.5) * 100, z: (Math.random() - 1) * 100, userName: 'Hal' })
 		// setSphereArray(tempArray2)
 	}, [])
+
+	// useEffect(() => {
+	// 	// for reformatting database, commented out when theres no changes
+	// 	// for each sphere, update with new data
+	// 	sphereArray.forEach((element) => {
+	// 		const databaseRef = ref(realtime, `/users/${element.userName}`)
+	// 		update(databaseRef, { curPosForce: {x: 0, y: 0, z: 0} })
+	// 	})
+
+	// }, [sphereArray])
 
 	const handleUserNameChange = (event) => {
 		setCurrentUserName(event.target.value)
@@ -84,28 +97,28 @@ function App() {
 	useEffect(() => {
 		let iX = null
 		let iY = null
-		
+
 		const startTouch = (e) => {
 			iX = e.touches[0].clientX
 			iY = e.touches[0].clientY
 		}
-		
+
 		const moveTouch = (e) => {
 			e.preventDefault()
-			
-			if (iX ===null) {
+
+			if (iX === null) {
 				return
 			}
-			if (iY ===null) {
+			if (iY === null) {
 				return
 			}
-			
+
 			let currentX = e.touches[0].clientX
 			let currentY = e.touches[0].clientY
-			
+
 			let diffX = iX - currentX
 			let diffY = iY - currentY
-			
+
 			let size = 1
 			if (Math.abs(diffX) > Math.abs(diffY)) {
 				if (diffX > size) {
@@ -130,10 +143,10 @@ function App() {
 
 		}
 		const screen = document.querySelector('.App')
-		screen.addEventListener('touchstart', startTouch, {passive: false})
-		screen.addEventListener('touchmove', moveTouch, {passive: false})
+		screen.addEventListener('touchstart', startTouch, { passive: false })
+		screen.addEventListener('touchmove', moveTouch, { passive: false })
 	}, [])
-	
+
 	return (
 		<div className="App">
 			<div className="wrapper">
@@ -144,6 +157,7 @@ function App() {
 					<input type="text" name="userName" id="userName" value={currentUserName} onChange={handleUserNameChange} />
 					<label htmlFor="color">Color: </label>
 					<input type="color" name="color" id="color" value={colorChoice} onChange={handleColorChange} />
+					<button type="button" onClick={handleSubmit}>Create Sphere</button>
 				</form>
 				<div className="info">
 					<p>Camera location:</p>
@@ -191,6 +205,7 @@ function App() {
 										setColor={setColorChoice}
 										touched={touched}
 										setTouched={setTouched}
+										curPosForce={element.curPosForce}
 									/>
 								)
 								// })

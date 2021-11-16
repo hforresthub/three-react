@@ -16,6 +16,13 @@ function Sphere(props) {
 	const [posForce, setPosForce] = useState({ x: 0, y: 0, z: 0 })
 	const [lastUpdateLocation, setLastUpdateLocation] = useState([0, 0, 0])
 	// Subscribe this component to the render-loop, rotate the mesh every frame
+
+	// apply any forces acquired from the database
+	useFrame((state, delta) => {
+		if (!(props.currentUserTrue)) {
+
+		}
+	})
 	useFrame((state, delta) => {
 		if (props.currentUserTrue) {
 			// console.log(props);
@@ -36,8 +43,8 @@ function Sphere(props) {
 			}
 			props.setTouched(0)
 		}
-	})		
-		useFrame((state, delta) => {
+	})
+	useFrame((state, delta) => {
 		// bounding
 		// const boundSize = 13
 		// if (currentSphere.current.position.x > boundSize) {
@@ -125,7 +132,7 @@ function Sphere(props) {
 		if (props.currentUserTrue && changedLocation(...lastUpdateLocation, currentSphere.current.position.x, currentSphere.current.position.y, currentSphere.current.position.z)) {
 			setLastUpdateLocation([currentSphere.current.position.x, currentSphere.current.position.y, currentSphere.current.position.z])
 			const databaseRef = ref(realtime, `/users/${props.currentUser}`)
-			set(databaseRef, { x: currentSphere.current.position.x, y: currentSphere.current.position.y, z: currentSphere.current.position.z, color: currentSphere.current.color })
+			set(databaseRef, { x: currentSphere.current.position.x, y: currentSphere.current.position.y, z: currentSphere.current.position.z, color: currentSphere.current.color, curPosForce: posForce })
 			// console.log("updated firebase");
 		}
 	})
