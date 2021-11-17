@@ -16,6 +16,8 @@ form {
 	flex-direction: column;
 	padding: 0 2%;
 }
-.wrapper p {
-	display: none;
+@media (max-width: 600px) {
+	.wrapper p {
+		display: none;
+	}
 }
