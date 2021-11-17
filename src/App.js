@@ -11,7 +11,7 @@ function App() {
 
 	const [currentUserName, setCurrentUserName] = useState('')
 	const [colorChoice, setColorChoice] = useState('#000')
-	const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 10 })
+	const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 20 })
 	const [cameraRotation, setCameraRotation] = useState({ x: 0, y: 0, z: 0 })
 	const [touched, setTouched] = useState(0)
 
