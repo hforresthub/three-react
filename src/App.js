@@ -5,7 +5,7 @@ import Camera from './Camera'
 import { Canvas } from '@react-three/fiber'
 import { useEffect, useState } from 'react';
 import realtime from './firebase'
-import { ref, onValue, set } from 'firebase/database'
+import { ref, onValue, set, update } from 'firebase/database'
 
 function App() {
 
@@ -26,10 +26,10 @@ function App() {
 		})
 		if (currentUserName && currentUserName !== null && checkForName.length === 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
-			set(databaseRef, { x: 0, y: 0, z: -1, color: colorChoice })
+			update(databaseRef, { x: 0, y: 0, z: -1, color: colorChoice })
 		} else if (currentUserName && currentUserName !== null && checkForName.length !== 0) {
 			const databaseRef = ref(realtime, `/users/${currentUserName}`)
-			set(databaseRef, { x: checkForName[0].x, y: checkForName[0].y, z: checkForName[0].z, color: colorChoice })
+			update(databaseRef, { x: checkForName[0].x, y: checkForName[0].y, z: checkForName[0].z, color: colorChoice })
 		}
 	}
 

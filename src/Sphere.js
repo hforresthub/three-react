@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import useKeypress from 'react-use-keypress'
 import { useFrame } from '@react-three/fiber'
 import realtime from './firebase'
-import { ref, set } from 'firebase/database'
+import { ref, set, update } from 'firebase/database'
 // import { useEffect } from 'react'
 
 function Sphere(props) {
@@ -132,7 +132,7 @@ function Sphere(props) {
 		if (props.currentUserTrue && changedLocation(...lastUpdateLocation, currentSphere.current.position.x, currentSphere.current.position.y, currentSphere.current.position.z)) {
 			setLastUpdateLocation([currentSphere.current.position.x, currentSphere.current.position.y, currentSphere.current.position.z])
 			const databaseRef = ref(realtime, `/users/${props.currentUser}`)
-			set(databaseRef, { x: currentSphere.current.position.x, y: currentSphere.current.position.y, z: currentSphere.current.position.z, color: currentSphere.current.color, curPosForce: posForce })
+			update(databaseRef, { x: currentSphere.current.position.x, y: currentSphere.current.position.y, z: currentSphere.current.position.z, color: currentSphere.current.color, curPosForce: posForce })
 			// console.log("updated firebase");
 		}
 	})
