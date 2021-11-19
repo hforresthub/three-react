@@ -13,36 +13,28 @@ function Sphere(props) {
 	const [click, setClick] = useState(Math.floor(Math.random() * 5))
 	// impulse forces
 	const [rotForce, setRotForce] = useState({ x: 0, y: 0, z: 0 })
+	const [moving, setMoving] = useState(false)
 	const [posForce, setPosForce] = useState({ x: 0, y: 0, z: 0 })
 	const [lastUpdateLocation, setLastUpdateLocation] = useState([0, 0, 0])
 	// Subscribe this component to the render-loop, rotate the mesh every frame
 
+	//check if has momentum 
+	const hasMomentum = () => {
+		return (props.curPosForce.x !== 0 || props.curPosForce.y !== 0 || props.curPosForce.z !== 0)
+	}
+
 	// apply any forces acquired from the database
 	useFrame((state, delta) => {
-		if (!(props.currentUserTrue)) {
-
+		// updates from firebase for non current user
+		if (!(props.currentUserTrue) && !moving && hasMomentum()) {
+			setPosForce(props.curPosForce)
+			setMoving(true)
+		} else if (!(props.currentUserTrue) && moving && !hasMomentum()) {
+			setMoving(false)
 		}
 	})
 	useFrame((state, delta) => {
-		if (props.currentUserTrue) {
-			// console.log(props);
-			if (props.touched === 1) {
-				setRotForce({ x: 0, y: rotForce.y + 1.2, z: 0 })
-			} else if (props.touched === 2) {
-				setRotForce({ x: 0, y: rotForce.y - 1.2, z: 0 })
-			}
-			if (props.touched === 3) {
-				setPosForce({ x: posForce.x - Math.sin(currentSphere.current.rotation.y) * 5, y: posForce.y, z: posForce.z - Math.cos(currentSphere.current.rotation.y) * 5 })
-				// console.log("testing yo", posForce.x - Math.sin(currentSphere.current.rotation.y) * 50);
-				// currentSphere.current.position.z -= 1 * speed * Math.cos(currentSphere.current.rotation.y)
-				// currentSphere.current.position.x -= 1 * speed * Math.sin(currentSphere.current.rotation.y)
-			} else if (props.touched === 4) {
-				setPosForce({ x: posForce.x + Math.sin(currentSphere.current.rotation.y), y: posForce.y, z: posForce.z + Math.cos(currentSphere.current.rotation.y) })
-				// currentSphere.current.position.z += 1 * speed * Math.cos(currentSphere.current.rotation.y)
-				// currentSphere.current.position.x += 1 * speed * Math.sin(currentSphere.current.rotation.y)
-			}
-			props.setTouched(0)
-		}
+
 	})
 	useFrame((state, delta) => {
 		// bounding
@@ -82,6 +74,35 @@ function Sphere(props) {
 		// }
 		// console.log(rotForce);
 		// const initialLocation = {x: currentSphere.current.position.x, y: currentSphere.current.position.y , z: currentSphere.current.position.z}
+
+		// mobile touch events movement
+		if (props.currentUserTrue) {
+			// console.log(props);
+			if (props.touched === 1) {
+				setRotForce({ x: 0, y: rotForce.y + 1.2, z: 0 })
+			} else if (props.touched === 2) {
+				setRotForce({ x: 0, y: rotForce.y - 1.2, z: 0 })
+			}
+			if (props.touched === 3) {
+				setPosForce({ x: posForce.x - Math.sin(currentSphere.current.rotation.y) * 5, y: posForce.y, z: posForce.z - Math.cos(currentSphere.current.rotation.y) * 5 })
+				// console.log("testing yo", posForce.x - Math.sin(currentSphere.current.rotation.y) * 50);
+				// currentSphere.current.position.z -= 1 * speed * Math.cos(currentSphere.current.rotation.y)
+				// currentSphere.current.position.x -= 1 * speed * Math.sin(currentSphere.current.rotation.y)
+			} else if (props.touched === 4) {
+				setPosForce({ x: posForce.x + Math.sin(currentSphere.current.rotation.y), y: posForce.y, z: posForce.z + Math.cos(currentSphere.current.rotation.y) })
+				// currentSphere.current.position.z += 1 * speed * Math.cos(currentSphere.current.rotation.y)
+				// currentSphere.current.position.x += 1 * speed * Math.sin(currentSphere.current.rotation.y)
+			}
+			props.setTouched(0)
+		}
+
+		// // updates from firebase for non current user
+		// if (!(props.currentUserTrue) && !moving && hasMomentum()) {
+		// 	setPosForce(props.curPosForce)
+		// 	setMoving(true)
+		// } else if (!(props.currentUserTrue) && moving && !hasMomentum()) {
+		// 	setMoving(false)
+		// }
 
 		const rotSpeed = 0.01
 		if (rotForce.y > 1) {
@@ -136,6 +157,7 @@ function Sphere(props) {
 			// console.log("updated firebase");
 		}
 	})
+
 	useKeypress(['w', 'a', 's', 'd', ' ', 'c'], (event) => {
 		// event.preventDefault()
 		// const speed = 0.05
